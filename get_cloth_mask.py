@@ -35,9 +35,24 @@ b_img = mask* 255
 if b.shape[1]<=600 and b.shape[0]<=500:
     b=cv2.resize(b,(int(b.shape[1]*1.2),int(b.shape[0]*1.2)))
     b_img=cv2.resize(b_img,(int(b_img.shape[1]*1.2),int(b_img.shape[0]*1.2)))
-shape=b_img.shape
-img[int((1024-shape[0])/2): 1024-int((1024-shape[0])/2),int((768-shape[1])/2):768-int((768-shape[1])/2)]=b
-seg_img[int((1024-shape[0])/2): 1024-int((1024-shape[0])/2),int((768-shape[1])/2):768-int((768-shape[1])/2)]=b_img
+# shape=b_img.shape
+# img[int((1024-shape[0])/2): 1024-int((1024-shape[0])/2),int((768-shape[1])/2):768-int((768-shape[1])/2)]=b
+# seg_img[int((1024-shape[0])/2): 1024-int((1024-shape[0])/2),int((768-shape[1])/2):768-int((768-shape[1])/2)]=b_img
+    
+shape_b_img = b_img.shape
+
+# Calculate the indices for slicing img and seg_img
+start_row = int((1024 - shape_b_img[0]) / 2)
+end_row = start_row + shape_b_img[0]  # Adjusted end row based on shape_b_img
+start_col = int((768 - shape_b_img[1]) / 2)
+end_col = start_col + shape_b_img[1]  # Adjusted end column based on shape_b_img
+
+# Ensure the shapes match before assignment
+if b.shape == img[start_row:end_row, start_col:end_col].shape:
+    img[start_row:end_row, start_col:end_col] = b
+
+if b_img.shape == seg_img[start_row:end_row, start_col:end_col].shape:
+    seg_img[start_row:end_row, start_col:end_col] = b_img
 
 
 cv2.imwrite("./HR-VITON-main/test/test/cloth/00001_00.jpg",img)
